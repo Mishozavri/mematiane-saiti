@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>დავით აღმაშენებელი და თბილისის შემოერთება</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&family=Noto+Serif+Georgian:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Marked for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Application Styles -->
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Noto Sans Georgian', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #1c1917; /* stone-900 */
+        }
+        
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif Georgian', serif;
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar for Chronicle Section */
+        .parchment-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .parchment-scroll::-webkit-scrollbar-track {
+            background: #fde68a; 
+        }
+        .parchment-scroll::-webkit-scrollbar-thumb {
+            background: #b45309; 
+            border-radius: 4px;
+        }
+
+        /* Timeline Active State */
+        .timeline-dot.active {
+            background-color: #b45309; /* amber-700 */
+            border-color: #78350f; /* amber-900 */
+            transform: scale(1.25);
+        }
+
+        /* Chat Modal Transitions */
+        .chat-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .chat-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 300ms ease-out;
+        }
+        .chat-exit {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .chat-exit-active {
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 300ms ease-in;
+        }
+        
+        /* Loading Sparkle Animation */
+        @keyframes sparkle {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .sparkle-anim {
+            animation: sparkle 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- Navigation -->
+    <nav class="bg-stone-900 text-amber-50 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">👑</span>
+                    <span class="font-bold text-lg tracking-wider">ისტორიული მატიანე</span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                    <a href="#intro" class="hover:text-amber-400 transition">შესავალი</a>
+                    <a href="#chronicle" class="hover:text-amber-400 transition">მატიანე</a>
+                    <a href="#analysis" class="hover:text-amber-400 transition">ანალიზი</a>
+                    <a href="#significance" class="hover:text-amber-400 transition">მნიშვნელობა</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="intro" class="bg-stone-800 text-stone-100 py-16 px-4 text-center border-b-4 border-amber-700">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 text-amber-500">თბილისის დაბრუნება და საქართველოს გაერთიანება</h1>
+            <p class="text-lg md:text-xl text-stone-300 mb-8 leading-relaxed">
+                ინტერაქციული მოგზაურობა დავით IV აღმაშენებლის ეპოქაში. გამოიკვლიეთ როგორ დაუბრუნდა თბილისი საქართველოს, რა სტრატეგიით მიაღწია მეფემ გამარჯვებას და რა მნიშვნელობა ჰქონდა ამ მოვლენას ქვეყნისთვის.
+            </p>
+            <div class="flex justify-center gap-4">
+                <button onclick="document.getElementById('chronicle').scrollIntoView({behavior: 'smooth'})" class="bg-amber-700 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:-translate-y-1">
+                    📖 წაიკითხე მატიანე
+                </button>
+                <button onclick="document.getElementById('timeline-section').scrollIntoView({behavior: 'smooth'})" class="bg-stone-600 hover:bg-stone-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:-translate-y-1">
+                    ⏳ იხილე ქრონოლოგია
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
+
+        <!-- 1. Chronology Section (Context) -->
+        <section id="timeline-section" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">📜 ისტორიული კონტექსტი და ქრონოლოგია</h2>
+                <p class="text-stone-600 max-w-2xl mx-auto">
+                    თბილისის შემოერთება არ ყოფილა იზოლირებული მოვლენა. ის დავით აღმაშენებლის თანმიმდევრული პოლიტიკის შედეგი იყო.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                <!-- Timeline Navigation -->
+                <div class="md:col-span-4 relative pl-4 border-l-4 border-stone-300 space-y-8" id="timeline-nav">
+                    <!-- Items generated by JS -->
+                </div>
+
+                <!-- Timeline Details Panel -->
+                <div class="md:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600 min-h-[300px] flex flex-col justify-center transition-all duration-300" id="timeline-content-panel">
+                    <h3 class="text-2xl font-bold text-amber-800 mb-4" id="tl-title">აირჩიეთ მოვლენა</h3>
+                    <p class="text-lg text-stone-700 leading-relaxed" id="tl-desc">
+                        დააწკაპუნეთ მარცხნივ მოცემულ წლებზე, რათა გაიგოთ, როგორ მიგვიყვანა თითოეულმა ნაბიჯმა თბილისის გათავისუფლებამდე.
+                    </p>
+                    <div class="mt-6 flex items-center text-stone-500 text-sm">
+                        <span class="mr-2 text-xl">💡</span>
+                        <span id="tl-insight">ისტორიული კონტექსტი</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. The Chronicle (Creative Part) with AI Writer -->
+        <section id="chronicle" class="bg-amber-50 rounded-lg overflow-hidden shadow-inner border border-amber-200 scroll-mt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- The "Book" Side -->
+                <div class="p-8 lg:p-12 bg-[#fffbeb] relative">
+                    <div class="absolute top-4 left-4 text-4xl opacity-10">🖋️</div>
+                    <h2 class="text-3xl serif-font font-bold text-amber-900 mb-6 border-b-2 border-amber-200 pb-2">
+                        მატიანე „ძლევაი საკვირველი“
+                    </h2>
+                    
+                    <div class="h-80 overflow-y-auto parchment-scroll pr-4 text-lg leading-loose text-stone-800 serif-font text-justify mb-8" id="chronicle-text">
+                        <!-- Chronicle text injected by JS -->
+                    </div>
+
+                    <!-- AI Feature 1: Chronicle Writer -->
+                    <div class="bg-amber-100 p-4 rounded-lg border border-amber-300 mt-4">
+                        <h4 class="text-amber-800 font-bold mb-2 flex items-center gap-2">
+                            <span>✨</span> გააგრძელე მატიანე
+                        </h4>
+                        <p class="text-xs text-amber-700 mb-2">დაწერე დასაწყისი და ხელოვნური ინტელექტი გააგრძელებს მემატიანის სტილში:</p>
+                        <textarea id="chronicle-input" class="w-full p-2 rounded bg-white border border-amber-200 text-stone-800 text-sm focus:ring-2 focus:ring-amber-500 outline-none mb-2" rows="2" placeholder="მაგ: და შეკრიბა მეფემან დიდებულნი..."></textarea>
+                        <button onclick="generateChronicle()" id="chronicle-btn" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold py-2 px-4 rounded transition flex justify-center items-center gap-2">
+                            <span>✍️</span> შეთხზე მატიანე
+                        </button>
+                        <div id="chronicle-output" class="mt-3 text-sm text-stone-800 italic hidden p-2 bg-white rounded border-l-2 border-amber-500"></div>
+                    </div>
+                </div>
+                
+                <!-- The Visual/Context Side -->
+                <div class="bg-stone-800 p-8 lg:p-12 flex flex-col justify-center text-stone-200">
+                    <h3 class="text-2xl font-bold mb-4 text-amber-400">შემოქმედებითი რეფლექსია</h3>
+                    <p class="mb-6 leading-relaxed">
+                        ეს ტექსტი სტილიზებულია XI-XII საუკუნეების ქართული საისტორიო პროზის მიხედვით. მასში ხაზგასმულია:
+                    </p>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-amber-500 mr-2">✦</span>
+                            <span><strong>ღვთიური ნება:</strong> გამარჯვება აღქმულია როგორც ღვთის წყალობა.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-amber-500 mr-2">✦</span>
+                            <span><strong>მეფის სიბრძნე:</strong> დავითი წარმოდგენილია როგორც „ხუროთმოძღვარი“.</span>
+                        </li>
+                    </ul>
+                    <div class="mt-auto pt-4 border-t border-stone-600 text-sm text-stone-400">
+                        * გამოიყენეთ "გააგრძელე მატიანე" ფუნქცია თქვენი დავალების შემოქმედებითი ნაწილისთვის.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Analytical Section (Charts) -->
+        <section id="analysis" class="scroll-mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">📊 სტრატეგიული ანალიზი</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- Chart 1: Military Composition -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-stone-800 mb-2">სამხედრო რეფორმა</h3>
+                        <div class="chart-container">
+                            <canvas id="armyChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Chart 2: Strategic Balance -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-stone-800 mb-2">დიდგორის ეფექტი (1121 წ.)</h3>
+                        <div class="chart-container">
+                            <canvas id="battleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Significance Cards -->
+        <section id="significance" class="scroll-mt-24 mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">🌟 მნიშვნელობა</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-500">
+                        <div class="text-4xl mb-4">🗺️</div>
+                        <h3 class="font-bold text-lg mb-2">გაერთიანება</h3>
+                        <p class="text-sm text-stone-600">დასრულდა "ქართული მიწების შეკრების" პროცესი.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-amber-500">
+                        <div class="text-4xl mb-4">🏛️</div>
+                        <h3 class="font-bold text-lg mb-2">ახალი დედაქალაქი</h3>
+                        <p class="text-sm text-stone-600">ცენტრმა გადაინაცვლა თბილისში.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500">
+                        <div class="text-4xl mb-4">💰</div>
+                        <h3 class="font-bold text-lg mb-2">ეკონომიკა</h3>
+                        <p class="text-sm text-stone-600">კონტროლი სავაჭრო გზებზე.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-purple-500">
+                        <div class="text-4xl mb-4">🤝</div>
+                        <h3 class="font-bold text-lg mb-2">ტოლერანტობა</h3>
+                        <p class="text-sm text-stone-600">რჯულის თავისუფლება.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center border-t border-stone-800">
+        <p class="text-sm">შექმნილია ისტორიის კომპლექსური დავალებისთვის</p>
+    </footer>
+
+    <!-- AI Feature 2: Floating Chat Widget -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        
+        <!-- Chat Modal -->
+        <div id="chat-modal" class="hidden mb-4 w-80 md:w-96 bg-white rounded-xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col transition-all duration-300 transform origin-bottom-right" style="height: 450px;">
+            <!-- Header -->
+            <div class="bg-stone-900 p-4 flex justify-between items-center text-amber-50">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">📜</span>
+                    <span class="font-bold">ჰკითხე მემატიანეს</span>
+                </div>
+                <button onclick="toggleChat()" class="text-stone-400 hover:text-white">&times;</button>
+            </div>
+            
+            <!-- Messages Area -->
+            <div id="chat-messages" class="flex-grow p-4 overflow-y-auto bg-stone-50 space-y-4 text-sm">
+                <div class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center text-xs border border-amber-400 flex-shrink-0">📜</div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-stone-200 text-stone-800">
+                        მშვიდობა შენდა, მგზავრო. მე მეფე დავითის კარის მემატიანე ვარ. რა გსურს იცოდე ჩვენი სახელოვანი მეფის ან თბილისის გათავისუფლების შესახებ?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-3 bg-white border-t border-stone-200">
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="დასვი შეკითხვა..." class="flex-grow p-2 border border-stone-300 rounded focus:outline-none focus:border-amber-500 text-sm" onkeypress="handleEnter(event)">
+                    <button onclick="sendMessage()" id="send-btn" class="bg-amber-700 hover:bg-amber-600 text-white p-2 rounded transition">
+                        ➤
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trigger Button -->
+        <button onclick="toggleChat()" class="bg-stone-900 hover:bg-stone-800 text-amber-400 p-4 rounded-full shadow-lg border-2 border-amber-500 transition-all hover:scale-110 flex items-center gap-2 group">
+            <span class="text-2xl group-hover:animate-pulse">✨</span>
+            <span class="font-bold hidden group-hover:inline">ჰკითხე მემატიანეს</span>
+        </button>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // --- API Configuration ---
+        const apiKey = ""; // Set by environment
+        const model = "gemini-2.5-flash-preview-09-2025";
+
+        // --- Data & Charts (Existing) ---
+        const timelineData = [
+            { year: "1103", title: "რუის-ურბნისის კრება", desc: "ეკლესიის და სახელმწიფოს გაძლიერება.", insight: "წესრიგის დამყარება." },
+            { year: "1118", title: "ყივჩაღთა გადმოსახლება", desc: "40,000 ოჯახის ჩამოსახლება და მუდმივი ჯარის შექმნა.", insight: "სამხედრო რესურსი." },
+            { year: "1121", title: "დიდგორის ბრძოლა", desc: "კოალიციის განადგურება.", insight: "მტრის მთავარი ძალის განეიტრალება." },
+            { year: "1122", title: "თბილისის შემოერთება", desc: "400 წლის შემდეგ თბილისი დაბრუნდა.", insight: "საბოლოო მიზანი." }
+        ];
+
+        const chronicleContent = `
+            <p class="mb-4"><strong class="text-xl block mb-2 text-amber-900">ჟამსა მას...</strong> 
+            ოდეს უფალმან მოჰხედა ერსა ჩვენსა და მოავლინა მეფე მეფეთა დავითი, ძე გიორგისი, ქვეყანა ქართლისა იყო აოხრებული „დიდი თურქობისა“ და უსჯულოთა თარეშისგან. არამედ დავითმა, ვითარცა ბრძენმა ხუროთმოძღვარმა, იწყო შენებაი და განმტკიცებაი სამეფოსა.</p>
+            <p class="mb-4"><strong class="text-xl block mb-2 text-amber-900">ქრონიკონი იყო 441 (1121 წელი)</strong> 
+            ოდეს დიდგორის ველზე, „ძლევაი საკვირველით“ განგვინათლა უფალმა გონება და დავითმა, სპითა თვისითა და ყივჩაღთა თანადგომითა, დაამხო კოალიცია ურდოებისა.</p>
+            <p class="mb-4"><strong class="text-xl block mb-2 text-amber-900">წელსა 1122-სა, თებერვალსა შინა</strong> 
+            მიადგა მეფე დავითი ქალაქსა თბილისს, რომელსაც ოთხას წელზე მეტია, უცხო ტომნი ფლობდნენ. მტკიცე იყო გალავანი თბილისისა, მაგრამ უფრო მტკიცე იყო ნება მეფისა.</p>
+        `;
+
+        // --- AI Helper Functions ---
+        
+        async function callGemini(systemInstruction, userPrompt) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userPrompt }] }],
+                        systemInstruction: { parts: [{ text: systemInstruction }] }
+                    })
+                });
+
+                if (!response.ok) throw new Error('API Error');
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error(error);
+                return "ბოდიში, კავშირი გაწყდა. გთხოვთ სცადოთ თავიდან.";
+            }
+        }
+
+        // --- Feature 1: Chronicle Generator ---
+        
+        async function generateChronicle() {
+            const input = document.getElementById('chronicle-input').value;
+            const outputDiv = document.getElementById('chronicle-output');
+            const btn = document.getElementById('chronicle-btn');
+
+            if (!input.trim()) return;
+
+            // UI Loading State
+            btn.innerHTML = `<span class="sparkle-anim">✨</span> იწერება...`;
+            btn.disabled = true;
+            outputDiv.classList.remove('hidden');
+            outputDiv.innerHTML = "<em>მემატიანე ფიქრობს...</em>";
+
+            const systemPrompt = `
+                You are a medieval Georgian chronicler (12th century). Continue the text provided by the user.
+                Style: Archaic, dignified, praising King David IV and God. Use Old Georgian flavor but modern script.
+                Context: The capture of Tbilisi (1122) and the unification of Georgia.
+                Keep it short (2-3 sentences).
+                Output language: Georgian.
+            `;
+
+            const text = await callGemini(systemPrompt, input);
+
+            outputDiv.innerHTML = marked.parse(text);
+            btn.innerHTML = `<span>✍️</span> შეთხზე მატიანე`;
+            btn.disabled = false;
+        }
+
+        // --- Feature 2: Historian Chat ---
+
+        let chatOpen = false;
+
+        function toggleChat() {
+            const modal = document.getElementById('chat-modal');
+            chatOpen = !chatOpen;
+            if (chatOpen) {
+                modal.classList.remove('hidden');
+                modal.classList.add('chat-enter-active');
+                setTimeout(() => document.getElementById('chat-input').focus(), 300);
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            const userText = input.value;
+            if (!userText.trim()) return;
+
+            // Add User Message
+            messages.innerHTML += `
+                <div class="flex gap-2 justify-end">
+                    <div class="bg-amber-600 text-white p-3 rounded-lg shadow-sm max-w-[80%]">
+                        ${userText}
+                    </div>
+                </div>
+            `;
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+
+            // Show Loading
+            const loadingId = 'loading-' + Date.now();
+            messages.innerHTML += `
+                <div id="${loadingId}" class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center text-xs border border-amber-400 flex-shrink-0">📜</div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-stone-200 text-stone-500 italic">
+                        მემატიანე ეძებს პასუხს...
+                    </div>
+                </div>
+            `;
+            messages.scrollTop = messages.scrollHeight;
+
+            // Call API
+            const systemPrompt = `
+                Role: Royal Historian of King David IV the Builder (12th century Georgia).
+                Tone: Wise, archaic (using terms like "ჟამსა მას", "ხელმწიფე"), respectful, patriotic.
+                Topics: Battle of Didgori, Capture of Tbilisi, Reforms (Military, Church), Tolerance.
+                Instructions: Answer the user's question accurately but maintain the persona. Keep answers concise (max 3 sentences).
+                Language: Georgian.
+            `;
+
+            const reply = await callGemini(systemPrompt, userText);
+
+            // Replace Loading with Reply
+            document.getElementById(loadingId).remove();
+            messages.innerHTML += `
+                <div class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center text-xs border border-amber-400 flex-shrink-0">📜</div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-stone-200 text-stone-800">
+                        ${marked.parse(reply)}
+                    </div>
+                </div>
+            `;
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('chronicle-text').innerHTML = chronicleContent;
+            
+            // Init Timeline (Simplified for brevity)
+            const navContainer = document.getElementById('timeline-nav');
+            timelineData.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left pl-6 py-3 border-l-4 transition hover:bg-stone-200 ${index === 0 ? 'border-amber-600 bg-stone-100' : 'border-transparent text-stone-500'}`;
+                btn.onclick = () => {
+                    document.getElementById('tl-title').textContent = item.title;
+                    document.getElementById('tl-desc').textContent = item.desc;
+                    document.getElementById('tl-insight').textContent = item.insight;
+                };
+                btn.innerHTML = `<span class="font-bold">${item.year}</span> <span class="text-sm block">${item.title}</span>`;
+                navContainer.appendChild(btn);
+            });
+
+            // Init Charts
+            renderCharts();
+        });
+
+        function renderCharts() {
+            Chart.defaults.font.family = "'Noto Sans Georgian', sans-serif";
+            new Chart(document.getElementById('armyChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['ყივჩაღები', 'ქართველები', 'სხვა'],
+                    datasets: [{ data: [40000, 15000, 600], backgroundColor: ['#d97706', '#b91c1c', '#4b5563'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+
+            new Chart(document.getElementById('battleChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['ქართველები', 'კოალიცია'],
+                    datasets: [{ label: 'ჯარი', data: [56000, 250000], backgroundColor: ['#059669', '#991b1b'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+    </script>
+</body>
+</html>
